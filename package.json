@@ -1,8 +1,8 @@
 {
   "name": "read-helper",
   "type": "module",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.1",
+  "description": "A CLI tool to help you read source code",
   "author": "RainyLiao",
   "license": "MIT",
   "keywords": ["cli", "helper", "read", "source-code"],
@@ -13,6 +13,7 @@
     }
   },
   "main": "./dist/index.cjs",
+  "bin": "./dist/index.cjs",
   "files": ["dist"],
   "scripts": {
     "lint": "eslint .",
