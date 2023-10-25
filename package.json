@@ -5,14 +5,24 @@
   "description": "",
   "author": "RainyLiao",
   "license": "MIT",
-  "keywords": [],
-  "main": "src/index.js",
+  "keywords": ["cli", "helper", "read", "source-code"],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "files": ["dist"],
   "scripts": {
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "build": "unbuild",
+    "build:stus": "unbuild --stus"
   },
   "dependencies": {
-    "inquirer": "^9.2.11",
+    "sade": "^1.8.1",
+    "unbuild": "^2.0.0",
     "zx": "^7.2.3"
   },
   "devDependencies": {
