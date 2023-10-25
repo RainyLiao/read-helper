@@ -5,7 +5,12 @@
   "description": "A CLI tool to help you read source code",
   "author": "RainyLiao",
   "license": "MIT",
-  "keywords": ["cli", "helper", "read", "source-code"],
+  "keywords": [
+    "cli",
+    "helper",
+    "read",
+    "source-code"
+  ],
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
@@ -13,24 +18,29 @@
     }
   },
   "main": "./dist/index.cjs",
-  "bin": "./dist/index.cjs",
-  "files": ["dist"],
+  "bin": {
+    "rh": "./dist/index.cjs"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "build": "unbuild",
-    "build:stus": "unbuild --stus"
+    "build:stus": "unbuild --stus",
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
     "sade": "^1.8.1",
-    "unbuild": "^2.0.0",
     "zx": "^7.2.3"
   },
   "devDependencies": {
     "@antfu/eslint-config": "1.0.0-beta.28",
     "eslint": "^8.52.0",
     "lint-staged": "^15.0.2",
-    "simple-git-hooks": "^2.9.0"
+    "simple-git-hooks": "^2.9.0",
+    "unbuild": "^2.0.0"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
