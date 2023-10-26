@@ -3,21 +3,22 @@
 import process from 'node:process'
 import sade from 'sade'
 import { $, chalk, echo } from 'zx'
+import { Direction, RhOptions } from './type'
 
 $.verbose = false
 
 /**
  * Checks out to the specified commit if it exists, and logs a message indicating success or failure.
- * @param {string} targetCommit - The commit to check out to.
+ * @param {string|undefined} targetCommit - The commit to check out to.
  * @returns {Promise<void>}
  */
-async function judgeTargetCommit(targetCommit) {
+async function judgeTargetCommit(targetCommit?: string) {
   if (targetCommit) {
     await $`git checkout ${targetCommit}`
     echo`${chalk.green(`切换到 ${chalk.blue(targetCommit)} 成功`)}`
     echo`${chalk.yellow('你可以尽情的查看源码了')}`
   }
-  else { echo`没有找到对应的commit` }
+  else { echo`没有找到即将切换的commit` }
 }
 
 /**
@@ -25,7 +26,7 @@ async function judgeTargetCommit(targetCommit) {
  * @param {string} branch - The name of the branch to check.
  * @returns {Promise<void>} - A Promise that resolves when the branch is found, or rejects if it is not found.
  */
-async function checkBranch(branch) {
+async function checkBranch(branch: string) {
   const branches = (await $`git branch`).stdout.trim().split('\n').map(branch => branch.replace('*', '').trim())
   if (!branches.includes(branch)) {
     echo`请提供要查看源码的分支`
@@ -40,7 +41,7 @@ async function checkBranch(branch) {
  * @param {string} direction - The direction to move in the commit history. Can be "prev", "next", or "first".
  * @param {string} hash - The hash of the commit to switch to. If provided, direction is ignored.
  */
-async function switchBranch(branch, direction, hash) {
+async function switchBranch(branch: string, direction: Direction, hash: string) {
   const commits = (await $`git log --reverse --pretty=%H ${branch}`).stdout.trim().split('\n')
   echo`当前分支的commit有 ${chalk.blue(commits.length)} 个`
   const currentCommit = (await $`git rev-parse HEAD`).stdout.trim()
@@ -67,24 +68,24 @@ async function switchBranch(branch, direction, hash) {
  * @param {string} dir - The directory to run the git commands in.
  * @param {object} opts - The options object containing the branch, direction, and hash properties.
  * @param {string} opts.branch - The name of the branch to view commits from.
- * @param {string} opts.direction - The direction to move through the commit history ('prev', 'next', or 'first').
+ * @param {Direction} opts.direction - The direction to move through the commit history ('prev', 'next', or 'first').
  * @param {string} opts.hash - The hash of the commit to view.
  * @returns {Promise<void>} - A Promise that resolves when the target commit has been determined.
  */
-async function handleArguments(dir, opts) {
+async function handleArguments(_: string, opts: RhOptions) {
   const { branch, direction, hash } = opts
   await checkBranch(branch)
   await switchBranch(branch, direction, hash)
 }
 
-function main() {
+export function main() {
   try {
     sade('rh [dir]', true)
       .version('0.0.1')
       .describe('帮助用户快速切换git的历史记录，查看源码')
-      .example('rh -b master -d prev')
-      .example('rh -b master -d next')
-      .example('rh -b master -d first')
+      .example('-b master -d prev')
+      .example('-b master -d next')
+      .example('-b master -d first')
       .option('-b, --branch', '指定要查看源码的分支')
       .option('-h, --hash', '指定跳到某个具体的commit')
       .option('-d, --direction', '指定查看的方向，prev表示上一个，next表示下一个，first表示第一个')
@@ -92,15 +93,12 @@ function main() {
       .option('-h, --help', '查看帮助')
       .action(handleArguments)
       .parse(process.argv, {
-        unknown: arg => chalk.red(`
-      错误的参数或者参数值: ${arg}
-    `),
+        unknown: arg => chalk.red(`错误的参数或者参数值: ${arg}`),
       })
+      // 增加一个rh back的命令
   }
-  catch (p) {
+  catch (p: any) {
     echo`${chalk.red('出错了')}`
     echo`${chalk.red(`错误信息如下:  ${p.stderr}`)}`
   }
 }
-
-main()

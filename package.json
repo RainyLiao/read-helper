@@ -13,22 +13,26 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
     }
   },
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "bin": {
-    "rh": "./dist/index.cjs"
+    "rh": "./bin/rh.mjs"
   },
   "files": [
+    "bin",
     "dist"
   ],
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "unbuild",
-    "build:stus": "unbuild --stus",
+    "build": "tsup src/index.ts --format esm --clean --dts",
+    "stub": "tsup src/index.ts --format esm",
+    "dev": "tsup src/index.ts --format esm --watch",
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
@@ -40,7 +44,7 @@
     "eslint": "^8.52.0",
     "lint-staged": "^15.0.2",
     "simple-git-hooks": "^2.9.0",
-    "unbuild": "^2.0.0"
+    "tsup": "^7.2.0"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged"
