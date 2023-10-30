@@ -76,8 +76,19 @@ async function handleViewCommand(opts: RhOptions) {
 }
 
 
+/**
+ * Handles the back command by finding the most recent checkout operation in the git reflog and checking out to the commit of the branch being viewed.
+ * @returns Promise<void>
+ */
 async function handleBackCommand() {
-
+  const lastCheckout = (await $`git reflog`).stdout.trim().split('\n').find(line => line.includes('checkout'))
+  if (!lastCheckout) {
+    echo`没有找到最近一次checkout的操作`
+    process.exit(1)
+  }
+  const lastCheckoutCommit = lastCheckout.split(' ')[5]
+  await $`git checkout ${lastCheckoutCommit}`
+  echo`${chalk.green(`回到 ${chalk.blue(lastCheckoutCommit)} 成功`)}`
 }
 
 export function main() {
