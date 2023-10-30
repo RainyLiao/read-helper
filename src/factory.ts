@@ -1,5 +1,3 @@
-#!/usr/bin/env zx
-
 import process from 'node:process'
 import sade from 'sade'
 import { $, chalk, echo } from 'zx'
