@@ -30,9 +30,9 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "build": "tsup src/index.ts --format esm --clean --dts",
-    "stub": "tsup src/index.ts --format esm",
-    "dev": "tsup src/index.ts --format esm --watch",
+    "build": "tsup bin/rh.ts --format esm --clean --dts",
+    "stub": "tsup bin/rh.ts --format esm",
+    "dev": "tsup bin/rh.ts --format esm --watch",
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
